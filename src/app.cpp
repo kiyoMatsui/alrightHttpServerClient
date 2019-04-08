@@ -12,7 +12,6 @@ http://www.apache.org/licenses/
 #include "alrightHttpConnection.h"
 #include "alrightData.h"
 
-#include <chrono> 
 #include <boost/asio.hpp>
 
 

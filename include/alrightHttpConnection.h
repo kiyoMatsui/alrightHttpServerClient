@@ -13,9 +13,6 @@ http://www.apache.org/licenses/
 #include <boost/asio.hpp>
 
 #include <fstream>
-#include <atomic>
-#include <thread>
-#include <iostream>
 
 namespace alright {
 
@@ -111,6 +108,7 @@ class httpConnection {
       systemError(errCode);
     }
     mSocket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+    mDone = true;
   }
 
  private:
@@ -121,6 +119,7 @@ class httpConnection {
   std::string lHtml; //buffer requires persistent data
   std::string lResponseStatusLine;
   std::string lResponseHeaders;
+  bool mDone = false;
 };
 
 

@@ -54,6 +54,15 @@ private:
       systemError(errCode);
     }
     listenForConnection();
+    for(auto iter=mConnections.begin(); iter!=mConnections.end();) {
+      if((*iter)->mDone == true) {
+        std::swap(*iter, mConnections.back());
+        mConnections.pop_back();
+      } else {
+        //dothings
+        iter++;
+      }
+    }
   }
 
   serverEndpointData mData;
