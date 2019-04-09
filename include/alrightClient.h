@@ -23,11 +23,11 @@ class alrightClient {
     mIOcontext.stop();
   }
 
-  const void run() {
+  void run() {
     mIOcontext.run();
   }
 
-  const std::pair<bool,std::shared_ptr<alrightHttpRequest>> getLastRequest() {
+  std::pair<bool,std::shared_ptr<alrightHttpRequest>> getLastRequest() const {
     if (mRequests.back()->mDone) {
       return std::make_pair(true, mRequests.back());
     }

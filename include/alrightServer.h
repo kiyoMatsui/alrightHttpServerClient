@@ -30,7 +30,7 @@ public:
     mIOcontext.stop();
   }
 
-  const void run() {
+  void run() {
     mIOcontext.run();
   }
 
