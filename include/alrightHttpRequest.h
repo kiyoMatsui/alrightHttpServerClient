@@ -75,7 +75,6 @@ public:
       systemError(errCode);
     }
   }
-   
 
   void endHandling(const boost::system::error_code& errCode,
                    std::size_t transferred_size_t) { 
@@ -86,8 +85,6 @@ public:
       systemError(errCode);
     }
   }
-  
- 
 
   clientEndpointData mData;
   boost::asio::ip::tcp::endpoint mEndpoint;
