@@ -18,7 +18,6 @@ int getHttpResource (std::string aPath,
                      std::string aRequestMethod,
                      std::string aResource,
                      std::string& aBody) {
-
   if (aPath.back() == '/') {
     aPath.pop_back();
   }
