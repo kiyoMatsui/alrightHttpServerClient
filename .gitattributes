@@ -1,4 +1,4 @@
 # Prerequisites
-include/*.h linguist-language=cpp
+*.h linguist-language=cpp
 
 

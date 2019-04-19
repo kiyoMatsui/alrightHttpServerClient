@@ -34,7 +34,6 @@ public:
     mIOcontext.run();
   }
 
-
 private:
   void listenForConnection() {
     auto lConnection = std::make_shared<serverType>(mData, mIOcontext);
