@@ -122,7 +122,6 @@ class httpConnection {
   bool mDone = false;
 };
 
-
 } // namespace alright
 
 #endif
