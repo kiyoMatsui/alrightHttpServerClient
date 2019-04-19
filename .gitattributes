@@ -1,4 +1,4 @@
 # Prerequisites
-*.rb linguist-language=cpp
+*.h linguist-language=cpp
 
 
