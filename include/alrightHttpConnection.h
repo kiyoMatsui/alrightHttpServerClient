@@ -13,10 +13,11 @@ http://www.apache.org/licenses/
 #include <boost/asio.hpp>
 
 #include <fstream>
+#include <memory>
 
 namespace alright {
 
-class httpConnection {
+class httpConnection : public std::enable_shared_from_this<httpConnection> {
  public:
   httpConnection(serverEndpointData aData,
                  boost::asio::io_context& aIOcontext)
@@ -30,10 +31,11 @@ class httpConnection {
 
   void startHandling() {
     mSocket->async_read_some(boost::asio::buffer(mRequest),
-                           [this](const boost::system::error_code& errCode,
-                                  std::size_t transferred_size_t) {
-                                  requestReceived(errCode, transferred_size_t);
-                            });
+                             [sharedThis = shared_from_this()](
+                                 const boost::system::error_code& errCode,
+                                 std::size_t transferred_size_t) { 
+                                 sharedThis->requestReceived(errCode, transferred_size_t);
+                             });
   }
   
  private:
@@ -94,11 +96,11 @@ class httpConnection {
     asioResponseBuffers.push_back(boost::asio::buffer(lResponseHeaders));
     asioResponseBuffers.push_back(boost::asio::buffer(lHtml, lHtml.size()));
     mSocket->async_write_some(asioResponseBuffers,
-			[this](
-			const boost::system::error_code& errCode,
-			std::size_t transferred_size_t) {
-			shutdown(errCode, transferred_size_t);
-                        });
+                              [sharedThis = shared_from_this()](
+                                  const boost::system::error_code& errCode,
+                                  std::size_t transferred_size_t) {
+                                sharedThis->shutdown(errCode, transferred_size_t);
+                              });
     return;
   }
 

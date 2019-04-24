@@ -21,7 +21,7 @@ public:
   explicit alrightServer(serverEndpointData aData)
   : mData(aData)
   , mIOcontext()
-  , mEndpoint(boost::asio::ip::address_v4::any(), mData.portNumber)
+  , mEndpoint(boost::asio::ip::address_v4::any(), (unsigned short)mData.portNumber)
   , mAcceptor(mIOcontext, mEndpoint) {
     listenForConnection();
   }
@@ -45,30 +45,19 @@ private:
   }
 
   void handleConnection(const boost::system::error_code& errCode,
-	std::shared_ptr<serverType> lConnection) {
+	std::shared_ptr<serverType> aConnection) {
     if (!errCode) {
-      lConnection->startHandling();
-      mConnections.push_back(lConnection);
+      aConnection->startHandling();
     } else {
       systemError(errCode);
     }
     listenForConnection();
-    for(auto iter=mConnections.begin(); iter!=mConnections.end();) {
-      if((*iter)->mDone == true) {
-        std::swap(*iter, mConnections.back());
-        mConnections.pop_back();
-      } else {
-        //dothings
-        iter++;
-      }
-    }
   }
 
   serverEndpointData mData;
   boost::asio::io_context mIOcontext;
   boost::asio::ip::tcp::endpoint mEndpoint;
   boost::asio::ip::tcp::acceptor mAcceptor;
-  std::vector<std::shared_ptr<serverType>> mConnections;
 };
 
 } // namespace alright
