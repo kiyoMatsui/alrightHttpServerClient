@@ -19,8 +19,8 @@ namespace alright {
 
 class httpConnection : public std::enable_shared_from_this<httpConnection> {
  public:
-  httpConnection(serverEndpointData aData,
-                 boost::asio::io_context& aIOcontext)
+  explicit httpConnection(serverEndpointData aData,
+                          boost::asio::io_context& aIOcontext)
       : mData(aData),
         mSocket(std::make_shared<boost::asio::ip::tcp::socket>(aIOcontext)) {
   };

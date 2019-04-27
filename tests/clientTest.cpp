@@ -19,12 +19,6 @@ TEST_CASE("client") {
   alright::alrightClient client{};
   client.request(lData2);
   client.run();
-  if (client.getLastRequest().first) {
-    std::cout.write(client.getLastRequest().second->mBytes.data(),
-                    client.getLastRequest().second->mTransferred_size_t);
-    std::cout << std::endl;
-  }
-  client.cleanUp();
 }
 
 
