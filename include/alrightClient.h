@@ -8,7 +8,7 @@ http://www.apache.org/licenses/
 #define ALRIGHT_CLIENT
 
 #include "alrightData.h"
-#include "alrightHttpRequest.h"
+#include "alrightHttpsRequest.h"
 #include <boost/asio.hpp>
 
 namespace alright {
@@ -28,7 +28,7 @@ class alrightClient {
   }
 
   void request(clientEndpointData aData) {
-    auto request = std::make_shared<alrightHttpRequest>(aData,mIOcontext);
+    auto request = std::make_shared<alrightHttpsRequest>(aData,mIOcontext);
     request->resolveQuery();
   }
 
