@@ -16,15 +16,12 @@ http://www.apache.org/licenses/
 
 
 int App::run(int argc, char** argv) const {
-
-  // localhost:9999
-
   alright::serverEndpointData lData(9999,
   std::string("/home/cocopad/KMWORKSPACE/kMTemplate2019/webSrv"));
 
   alright::alrightServer<alright::httpConnection> srv(lData);
   srv.run();
-
+  
   return 0;
 }
 

@@ -28,7 +28,6 @@ class alrightClient {
   }
 
   void request(clientEndpointData aData) {
-    //mRequests.emplace_back(aData); //didn't work for some reason... #checkLater
     auto request = std::make_shared<alrightHttpRequest>(aData,mIOcontext);
     request->resolveQuery();
   }

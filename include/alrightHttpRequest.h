@@ -11,6 +11,8 @@ http://www.apache.org/licenses/
 #include "alrightSystemError.h"
 
 #include <boost/asio.hpp>
+#include <fstream>
+#include <streambuf>
 #include <iostream>
 
 namespace alright {
@@ -30,7 +32,6 @@ class alrightHttpRequest : public std::enable_shared_from_this<alrightHttpReques
     boost::asio::ip::tcp::resolver::query queryToResolve(mData.address,
                                             std::to_string(mData.portNumber),
                                             boost::asio::ip::tcp::resolver::query::numeric_service);
-    //numeric_service port should be numeric string and not a "name" like http... i think  
     mResolver.async_resolve(queryToResolve,
                             [sharedThis = shared_from_this()](
                                 const boost::system::error_code& errCode,
@@ -42,12 +43,12 @@ class alrightHttpRequest : public std::enable_shared_from_this<alrightHttpReques
  private:
   void connectToSocket(const boost::system::error_code& errCode,
                      boost::asio::ip::tcp::resolver::iterator iterator) {
-    if (!errCode) {
+    if (!errCode) { 
       mSocket.async_connect(*iterator,
                             [sharedThis = shared_from_this()](
                                 const boost::system::error_code& errCode) {
                               sharedThis->writeToSocket(errCode);
-                            });
+                              }); 
     } else {
       systemError(errCode);
     }
@@ -55,55 +56,59 @@ class alrightHttpRequest : public std::enable_shared_from_this<alrightHttpReques
 
   void writeToSocket(const boost::system::error_code& errCode) {
     if (!errCode) {
+      //std::ifstream file("raw.txt");
+      //std::string requestString((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); //remember to add a extra carriage return
       std::string requestString = mData.requestMethod + " " + mData.requestURI
-                      + " " + mData.requestHttpVersion + "\r\nHost: "
-                      + mData.address  + "\r\n\r\n";
-      mSocket.async_write_some(boost::asio::buffer(requestString),
+                    + " " + mData.requestHttpVersion + "\r\nHost: "
+                                + mData.address + ":" + std::to_string(mData.portNumber) +
+                                "\r\nUser-Agent: " + "AlrightClient" +
+                                "\r\nAccept: " + "*/*"  + "\r\n\r\n";
+      
+      boost::asio::async_write(mSocket, boost::asio::buffer(requestString),
                                [sharedThis = shared_from_this()](
                                    const boost::system::error_code& errCode,
-                                   std::size_t bytes_transferred) {
-                                 sharedThis->readResponse(errCode, bytes_transferred);
-                               });
+                                   std::size_t aTransferred_size_t_4Signature) {
+                                 sharedThis->readResponse(errCode);
+                                 }); 
     } else {
       systemError(errCode);
     }
   }
     
-  void readResponse(const boost::system::error_code& errCode,
-                   std::size_t bytes_transferred) { 
-    if (!errCode) {
-      mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_send);
-      mSocket.async_read_some(boost::asio::buffer(mBytes),
-                              [sharedThis = shared_from_this()](
+  void readResponse(const boost::system::error_code& errCode) { 
+    if (!errCode) { 
+      boost::asio::async_read(mSocket, mResponse, boost::asio::transfer_at_least(1),
+                                         [sharedThis = shared_from_this()](
                                   const boost::system::error_code& errCode,
-                                  std::size_t bytes_transferred) {
-                                sharedThis->endHandling(errCode, bytes_transferred);
-                              });
+                                   std::size_t aTransferred_size_t_4Signature) {
+                                               sharedThis->endHandling(errCode);
+                                }); 
     } else {
       systemError(errCode);
     }
   }
 
-  void endHandling(const boost::system::error_code& errCode,
-                   std::size_t transferred_size_t) { 
-    if (!errCode) {
-      mTransferred_size_t = transferred_size_t;
-      mDone = true;
-      std::cout.write(mBytes.data(),mTransferred_size_t);
-      std::cout << std::endl;
-    } else {
+  void endHandling(const boost::system::error_code& errCode ) { 
+    if (!errCode ) {
+      std::cout << &mResponse; 
+      // continue untill EOF
+      boost::asio::async_read(mSocket, mResponse, boost::asio::transfer_at_least(1),
+      [sharedThis = shared_from_this()](const boost::system::error_code& errCode,
+                                        std::size_t aTransferred_size_t_4Signature) {                     
+                                sharedThis->endHandling(errCode);             
+                              });     
+    } else if(errCode != boost::asio::error::eof) {
       systemError(errCode);
-    }
+    } 
   }
+  //mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+  //mSocket.close();
 
   clientEndpointData mData;
   boost::asio::ip::tcp::endpoint mEndpoint;
   boost::asio::ip::tcp::resolver mResolver;
   boost::asio::ip::tcp::socket mSocket;
-  std::size_t mTransferred_size_t;
-  std::array<char, 4096> mBytes;
- public:
-  bool mDone = false;
+  boost::asio::streambuf mResponse;
 };
 
 } // namespace alright

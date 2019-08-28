@@ -12,10 +12,11 @@ http://www.apache.org/licenses/
 
 TEST_CASE("client") {
   alright::clientEndpointData lData2(9999,
-                                     "localhost",
+                                     "127.0.0.1",
                                      "GET",
                                      "/",
                                      "HTTP/1.1");
+
   alright::alrightClient client{};
   client.request(lData2);
   client.run();
