@@ -98,13 +98,13 @@ class alrightHttpsRequest : public std::enable_shared_from_this<alrightHttpsRequ
   
   void writeToSocket(const boost::system::error_code& errCode) {
     if (!errCode) {
-      //std::ifstream file("raw.txt");
-      //std::string requestString((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); //remember to add a extra carriage return
-      std::string requestString = mData.requestMethod + " " + mData.requestURI
-                    + " " + mData.requestHttpVersion + "\r\nHost: "
-                                + mData.address + ":" + std::to_string(mData.portNumber) +
-                                "\r\nUser-Agent: " + "AlrightClient" +
-                                "\r\nAccept: " + "*/*"  + "\r\n\r\n";
+      std::ifstream file("raw.txt");
+      std::string requestString((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()); //remember to add a extra carriage return
+      //std::string requestString = mData.requestMethod + " " + mData.requestURI
+        //            + " " + mData.requestHttpVersion + "\r\nHost: "
+          //                      + mData.address + ":" + std::to_string(mData.portNumber) +
+            //                    "\r\nUser-Agent: " + "AlrightClient" +
+              //                  "\r\nAccept: " + "*/*"  + "\r\n\r\n";
       
       boost::asio::async_write(mSocket, boost::asio::buffer(requestString),
                                [sharedThis = shared_from_this()](

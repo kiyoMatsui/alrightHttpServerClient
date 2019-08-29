@@ -24,7 +24,7 @@ FILE(GLOB_RECURSE EXAMPLE_SRCS01 ${MAINFOLDER}/src/*.cpp )
 #SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ~/boost/include)
 #SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ~/boost/lib)
 ## Project Dependencies
-find_package(Boost REQUIRED COMPONENTS system program_options regex filesystem asio)
+find_package(Boost REQUIRED COMPONENTS system program_options regex filesystem)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 #INCLUDE_DIRECTORIES(~/boost/include)
