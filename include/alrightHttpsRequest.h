@@ -28,9 +28,9 @@ class alrightHttpsRequest : public std::enable_shared_from_this<alrightHttpsRequ
   : mData(aData)
   , mEndpoint(boost::asio::ip::address_v4::any(), mData.portNumber)
   , mResolver(mIOcontext)
-  , ctx(boost::asio::ssl::context::sslv23)
+  , ctx(boost::asio::ssl::context::tlsv12)
   , mSocket(mIOcontext, ctx){
-    ctx.load_verify_file("ssl/ca.pem");
+    ctx.set_default_verify_paths();
     mSocket.set_verify_mode(boost::asio::ssl::verify_peer);
     mSocket.set_verify_callback([this](bool preverified,
                                        boost::asio::ssl::verify_context& aCtx)->bool {
