@@ -1,6 +1,5 @@
-GET / HTTP/1.1
-Host: https://www.google.com
+GET https://www.google.com/ HTTP/1.1
 User-Agent: alrightClient
 Accept: */*
+Host: www.google.com
 
-na
