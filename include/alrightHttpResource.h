@@ -9,15 +9,11 @@ http://www.apache.org/licenses/
 
 #include <boost/asio.hpp>
 #include <boost/filesystem.hpp>
-
 #include <fstream>
 
 namespace alright {
 
-int getHttpResource (std::string aPath,
-                     std::string aRequestMethod,
-                     std::string aResource,
-                     std::string& aBody) {
+int getHttpResource(std::string aPath, std::string aRequestMethod, std::string aResource, std::string& aBody) {
   if (aPath.back() == '/') {
     aPath.pop_back();
   }
@@ -28,19 +24,19 @@ int getHttpResource (std::string aPath,
   } else {
     lResourceFullPath = aPath + aResource;
   }
-  
+
   if (!boost::filesystem::exists(lResourceFullPath)) {
     aBody = "404 Not found\r\n";
     return 404;
   }
-  
+
   std::ifstream lResourcefstream(lResourceFullPath);
 
   if (!lResourcefstream.is_open()) {
     aBody = "500 Internal server error\r\n";
     return 500;
   }
-  
+
   if (aRequestMethod.compare("GET") != 0) {
     aBody = "501 Method Not implemented\r\n";
     return 501;
@@ -52,8 +48,8 @@ int getHttpResource (std::string aPath,
     aBody += lLine;
   }
   return 200;
-};
+}
 
-} // namespace alright
+}  // namespace alright
 
 #endif

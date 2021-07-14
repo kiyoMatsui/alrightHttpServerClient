@@ -6,10 +6,8 @@
 using namespace std;
 
 class App {
-
-public:
+ public:
   int run(int argc, char** argv) const;
-
   string getProjectName() const;
   string getProjectVersion() const;
 };

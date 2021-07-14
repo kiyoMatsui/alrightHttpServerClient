@@ -7,28 +7,23 @@ http://www.apache.org/licenses/
 #ifndef ALRIGHT_CLIENT
 #define ALRIGHT_CLIENT
 
+#include <boost/asio.hpp>
+
 #include "alrightData.h"
 #include "alrightHttpsRequest.h"
-#include <boost/asio.hpp>
 
 namespace alright {
 
 class alrightClient {
  public:
-  explicit alrightClient()
-      : mIOcontext() {
-  }
+  explicit alrightClient() : mIOcontext() {}
 
-  ~alrightClient() {
-    mIOcontext.stop();
-  }
+  ~alrightClient() { mIOcontext.stop(); }
 
-  void run() {
-    mIOcontext.run();
-  }
+  void run() { mIOcontext.run(); }
 
   void request(clientEndpointData aData) {
-    auto request = std::make_shared<alrightHttpsRequest>(aData,mIOcontext);
+    auto request = std::make_shared<alrightHttpsRequest>(aData, mIOcontext);
     request->resolveQuery();
   }
 
@@ -36,6 +31,6 @@ class alrightClient {
   boost::asio::io_context mIOcontext;
 };
 
-} // namespace alright
+}  // namespace alright
 
 #endif

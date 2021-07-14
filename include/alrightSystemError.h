@@ -7,15 +7,15 @@ http://www.apache.org/licenses/
 #ifndef ALRIGHT_SYSTEMERROR
 #define ALRIGHT_SYSTEMERROR
 
-#include <iostream>
 #include <boost/asio.hpp>
+#include <iostream>
 
 namespace alright {
 
-void systemError (const boost::system::error_code& ec) {
+void systemError(const boost::system::error_code& ec) {
   std::cout << "Boost system error code has occured! " << ec.message() << "\n";
-};
+}
 
-} // namespace alright
+}  // namespace alright
 
 #endif

@@ -7,45 +7,38 @@ http://www.apache.org/licenses/
 #ifndef ALRIGHT_SERVER
 #define ALRIGHT_SERVER
 
-#include "alrightData.h"
-#include "alrightSystemError.h"
-
 #include <boost/asio.hpp>
 #include <iostream>
+
+#include "alrightData.h"
+#include "alrightSystemError.h"
 
 namespace alright {
 
 template <typename serverType>
 class alrightServer {
-public:
+ public:
   explicit alrightServer(serverEndpointData aData)
-  : mData(aData)
-  , mIOcontext()
-  , mEndpoint(boost::asio::ip::address_v4::any(), (unsigned short)mData.portNumber)
-  , mAcceptor(mIOcontext, mEndpoint) {
+      : mData(aData),
+        mIOcontext(),
+        mEndpoint(boost::asio::ip::address_v4::any(), (unsigned short)mData.portNumber),
+        mAcceptor(mIOcontext, mEndpoint) {
     listenForConnection();
   }
 
-  ~alrightServer() {
-    mIOcontext.stop();
-  }
+  ~alrightServer() { mIOcontext.stop(); }
 
-  void run() {
-    mIOcontext.run();
-  }
+  void run() { mIOcontext.run(); }
 
-private:
+ private:
   void listenForConnection() {
     auto lConnection = std::make_shared<serverType>(mData, mIOcontext);
-    mAcceptor.async_accept(*lConnection->getSocket(), 
-              [this, lConnection](const boost::system::error_code& error) { 
-                              handleConnection(error, lConnection);
-                            });
-
+    mAcceptor.async_accept(*lConnection->getSocket(), [this, lConnection](const boost::system::error_code& error) {
+      handleConnection(error, lConnection);
+    });
   }
 
-  void handleConnection(const boost::system::error_code& errCode,
-	std::shared_ptr<serverType> aConnection) {
+  void handleConnection(const boost::system::error_code& errCode, std::shared_ptr<serverType> aConnection) {
     if (!errCode) {
       aConnection->startHandling();
     } else {
@@ -60,6 +53,6 @@ private:
   boost::asio::ip::tcp::acceptor mAcceptor;
 };
 
-} // namespace alright
+}  // namespace alright
 
 #endif
