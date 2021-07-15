@@ -19,7 +19,7 @@ namespace alright {
 class httpConnection : public std::enable_shared_from_this<httpConnection> {
  public:
   explicit httpConnection(serverEndpointData aData, boost::asio::io_context& aIOcontext)
-      : mData(aData), mSocket(std::make_shared<boost::asio::ip::tcp::socket>(aIOcontext)){};
+      : mData(std::move(aData)), mSocket(std::make_shared<boost::asio::ip::tcp::socket>(aIOcontext)){};
 
   std::shared_ptr<boost::asio::ip::tcp::socket> getSocket() { return mSocket; }
 
@@ -61,7 +61,7 @@ class httpConnection : public std::enable_shared_from_this<httpConnection> {
     return alright::getHttpResource(mData.serverPath, requestMethod, requestURI, aHtml);
   }
 
-  void requestReceived(const boost::system::error_code& errCode, std::size_t transferred_size_t) {
+  void requestReceived(const boost::system::error_code& errCode, std::size_t /*transferred_size_t*/) {
     if (errCode) {
       systemError(errCode);
       return;
@@ -73,9 +73,9 @@ class httpConnection : public std::enable_shared_from_this<httpConnection> {
                        std::to_string(lHtml.size()) + "\r\n" + std::string("content-type") + ": " +
                        std::string("html") + "\r\n\r\n";
 
-    asioResponseBuffers.push_back(boost::asio::buffer(lResponseStatusLine));
-    asioResponseBuffers.push_back(boost::asio::buffer(lResponseHeaders));
-    asioResponseBuffers.push_back(boost::asio::buffer(lHtml, lHtml.size()));
+    asioResponseBuffers.emplace_back(boost::asio::buffer(lResponseStatusLine));
+    asioResponseBuffers.emplace_back(boost::asio::buffer(lResponseHeaders));
+    asioResponseBuffers.emplace_back(boost::asio::buffer(lHtml, lHtml.size()));
     mSocket->async_write_some(
       asioResponseBuffers,
       [sharedThis = shared_from_this()](const boost::system::error_code& errCode, std::size_t transferred_size_t) {

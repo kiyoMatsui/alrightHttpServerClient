@@ -20,7 +20,7 @@ namespace alright {
 class alrightHttpRequest : public std::enable_shared_from_this<alrightHttpRequest> {
  public:
   explicit alrightHttpRequest(clientEndpointData aData, boost::asio::io_context& mIOcontext)
-      : mData(aData),
+      : mData(std::move(aData)),
         mEndpoint(boost::asio::ip::address_v4::any(), mData.portNumber),
         mResolver(mIOcontext),
         mSocket(mIOcontext) {}

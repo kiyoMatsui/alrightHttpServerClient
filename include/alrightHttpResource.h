@@ -13,7 +13,7 @@ http://www.apache.org/licenses/
 
 namespace alright {
 
-int getHttpResource(std::string aPath, std::string aRequestMethod, std::string aResource, std::string& aBody) {
+int getHttpResource(std::string aPath, std::string& aRequestMethod, std::string& aResource, std::string& aBody) {
   if (aPath.back() == '/') {
     aPath.pop_back();
   }
@@ -37,7 +37,7 @@ int getHttpResource(std::string aPath, std::string aRequestMethod, std::string a
     return 500;
   }
 
-  if (aRequestMethod.compare("GET") != 0) {
+  if (aRequestMethod.compare("GET")) {
     aBody = "501 Method Not implemented\r\n";
     return 501;
   }

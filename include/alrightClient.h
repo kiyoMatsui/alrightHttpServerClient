@@ -18,11 +18,16 @@ class alrightClient {
  public:
   explicit alrightClient() : mIOcontext() {}
 
+  alrightClient(const alrightClient& arg1) = delete;
+  alrightClient& operator=(const alrightClient& arg1) = delete;
+  alrightClient(alrightClient&& other) noexcept = delete;
+  alrightClient& operator=(alrightClient&& other) noexcept = delete;
+
   ~alrightClient() { mIOcontext.stop(); }
 
   void run() { mIOcontext.run(); }
 
-  void request(clientEndpointData aData) {
+  void request(clientEndpointData& aData) {
     auto request = std::make_shared<alrightHttpsRequest>(aData, mIOcontext);
     request->resolveQuery();
   }

@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "alrightClient.h"
-#include "catch2/catch.hpp"
 
 static constexpr uint16_t myport = 443;
 

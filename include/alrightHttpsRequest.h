@@ -24,7 +24,7 @@ namespace alright {
 class alrightHttpsRequest : public std::enable_shared_from_this<alrightHttpsRequest> {
  public:
   explicit alrightHttpsRequest(clientEndpointData aData, boost::asio::io_context& mIOcontext)
-      : mData(aData),
+      : mData(std::move(aData)),
         mEndpoint(boost::asio::ip::address_v4::any(), mData.portNumber),
         mResolver(mIOcontext),
         ctx(boost::asio::ssl::context::tlsv12),

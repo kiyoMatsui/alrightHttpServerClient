@@ -9,6 +9,7 @@ http://www.apache.org/licenses/
 
 #include <boost/asio.hpp>
 #include <iostream>
+#include <utility>
 
 #include "alrightData.h"
 #include "alrightSystemError.h"
@@ -19,12 +20,16 @@ template <typename serverType>
 class alrightServer {
  public:
   explicit alrightServer(serverEndpointData aData)
-      : mData(aData),
+      : mData(std::move(aData)),
         mIOcontext(),
         mEndpoint(boost::asio::ip::address_v4::any(), (unsigned short)mData.portNumber),
         mAcceptor(mIOcontext, mEndpoint) {
     listenForConnection();
   }
+  alrightServer(const alrightServer& arg1) = delete;
+  alrightServer& operator=(const alrightServer& arg1) = delete;
+  alrightServer(alrightServer&& other) noexcept = delete;
+  alrightServer& operator=(alrightServer&& other) noexcept = delete;
 
   ~alrightServer() { mIOcontext.stop(); }
 

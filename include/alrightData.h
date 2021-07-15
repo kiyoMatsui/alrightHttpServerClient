@@ -7,11 +7,14 @@ http://www.apache.org/licenses/
 #ifndef ALRIGHT_DATA
 #define ALRIGHT_DATA
 
+#include <string>
+#include <utility>
+
 namespace alright {
 
 class headerField {
  public:
-  explicit headerField(std::string aName, std::string aValue) : name(aName), value(aValue) {}
+  explicit headerField(std::string aName, std::string aValue) : name(std::move(aName)), value(std::move(aValue)) {}
 
  private:
   std::string name;
@@ -20,22 +23,22 @@ class headerField {
 
 class serverEndpointData {
  public:
-  explicit serverEndpointData(short unsigned int aPortNumber, std::string aServerPath)
-      : portNumber(aPortNumber), serverPath(aServerPath) {}
-  const short unsigned int portNumber;
+  explicit serverEndpointData(uint16_t aPortNumber, std::string aServerPath)
+      : portNumber(aPortNumber), serverPath(std::move(aServerPath)) {}
+  const uint16_t portNumber;
   const std::string serverPath;
 };
 
 class clientEndpointData {
  public:
-  explicit clientEndpointData(short unsigned int aPN, std::string aAddress, std::string aRequestMethod,
-                              std::string aRequestURI, std::string aRequestHttpVersion)
+  explicit clientEndpointData(uint16_t aPN, std::string aAddress, std::string aRequestMethod, std::string aRequestURI,
+                              std::string aRequestHttpVersion)
       : portNumber(aPN),
-        address(aAddress),
-        requestMethod(aRequestMethod),
-        requestURI(aRequestURI),
-        requestHttpVersion(aRequestHttpVersion) {}
-  const short unsigned int portNumber;
+        address(std::move(aAddress)),
+        requestMethod(std::move(aRequestMethod)),
+        requestURI(std::move(aRequestURI)),
+        requestHttpVersion(std::move(aRequestHttpVersion)) {}
+  const uint16_t portNumber;
   const std::string address;
   const std::string requestMethod;
   const std::string requestURI;
