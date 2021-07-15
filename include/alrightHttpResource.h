@@ -8,7 +8,7 @@ http://www.apache.org/licenses/
 #define ALRIGHT_HTTPRESOURCE
 
 #include <boost/asio.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <fstream>
 
 namespace alright {
@@ -25,7 +25,7 @@ int getHttpResource(std::string aPath, std::string aRequestMethod, std::string a
     lResourceFullPath = aPath + aResource;
   }
 
-  if (!boost::filesystem::exists(lResourceFullPath)) {
+  if (!std::filesystem::exists(lResourceFullPath)) {
     aBody = "404 Not found\r\n";
     return 404;
   }
